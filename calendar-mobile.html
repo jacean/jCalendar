@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<link href='plugins/fullcalendar-3.0.1/fullcalendar.css' rel='stylesheet' />
+<link href='plugins/fullcalendar-3.0.1/fullcalendar.print.css' rel='stylesheet' media='print' />
+<script src='plugins/fullcalendar-3.0.1./lib/moment.min.js'></script>
+<script src='plugins/fullcalendar-3.0.1/lib/jquery.min.js'></script>
+<script src='plugins/fullcalendar-3.0.1/fullcalendar.js'></script>
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="js/tools.js"></script>
+<script src="js/calFunction.js"></script>
+<style>
+
+	body {
+		margin: 40px 10px;
+		padding: 0;
+		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+		font-size: 14px;
+	}
+
+	#calendar {
+		max-width: 900px;
+		margin: 0 auto;
+	}
+
+</style>
+</head>
+<body>
+
+	<div id='calendar'></div>
+<button id="refresh">refresh</button>
+</body>
+<script>
+
+	var currentURL=window.location.href;
+	var params=$.parseURL(currentURL).params;
+	var ID=params.ID,
+		SID=params.SID,
+		startDate=params.startDate;
+		click2day=params.click2day;
+	var calInit=new CalendarInit(params);
+	calInit.init();
+	calInit.loadEvents();
+
+	$("#refresh").bind('click',function (){
+		$.log("refresh");
+		calInit.loadEvents();
+	});
+	
+</script>
+</html>
