@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+</head>
+<script>
+    function buttonclick(){
+        alert("a");
+
+    }
+    $(document).ready(function() {
+        $("#source").click(buttonclick);
+        var handle=$._data($("#source")[0], "events").click[0].handler;
+        $("#dest").click(handle);
+
+    });
+</script>    
+<body>
+    <button id="source" >source</button>
+    <button id="dest" >dest</button>
+    <input type="date">
+    <a data-goto="www.baidu.com">aa </a>
+
+</body>
+</html>

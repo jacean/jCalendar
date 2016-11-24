@@ -5,6 +5,21 @@
 })("start working...");
 
 
+var TEXT={
+    零:0,
+    一:1,
+    二:2,
+    三:3,
+    四:4,
+    五:5,
+    六:6,
+    七:7,
+    八:8,
+    九:9,
+    十:10
+}
+
+
 var CalendarInit=function(params){
     var _init=new Object();
     var _tools=new Object();
@@ -50,6 +65,12 @@ var CalendarInit=function(params){
         }
         return events;
     }
+    _tools.customHeader=function(){
+
+
+
+
+    }
 
     _oprate.newItem=function(ID,Evtstr,dateStart,dateEnd){
         
@@ -67,9 +88,10 @@ var CalendarInit=function(params){
         $('#calendar').fullCalendar({
 			header: {
 				center: 'title',
-				left: 'prev,next today',
-				right: 'month,basicWeek,basicDay'
+				left: 'prev',
+				right: 'next'
 			},
+            locale: 'zh-cn',
 			eventRender: function(event, element) {
             	// $(element).addTouch();
         	},
@@ -82,13 +104,19 @@ var CalendarInit=function(params){
 				//$(this).css('background-color', 'red');
                 //回传函数，告诉jsp点击了这个时间，然后由主机调用refresh回调重新渲染事件
                 // _oprate.newItem(ID,Evtstr,dateStart,dateEnd);
-				
+				customHeader();
 			},
+            // navLinkDayClick: function(date, jsEvent) {
+            //     console.log('day', date.format()); // date is a moment
+            //     console.log('coords', jsEvent.pageX, jsEvent.pageY);
+            //     customHeader();
+            // },
             eventClick: function(calEvent, jsEvent, view) {
                 console.log('Event: ' + calEvent.title+"BH:"+calEvent.BH);
                 // _oprate.editItem(ID,BH);
             }
 		});
+        customHeaderInit();
     }   
 
     _init.loadEvents=function(){
@@ -115,7 +143,8 @@ var CalendarInit=function(params){
                 // });
                 // $('#calendar').fullCalendar('rerenderEvents');
                 $("#calendar").fullCalendar( 'removeEventSources');
-                _tools._addEvents(source);              
+                _tools._addEvents(source);   
+                customHeader();           
             },
             dataType: "text"
         });
@@ -131,3 +160,114 @@ var CalendarInit=function(params){
 }
 
 ;;
+
+function customHeaderInit(){
+    var header=$(".fc-toolbar");
+        var leftButton=header.find(".fc-prev-button");
+         var rightButton=header.find(".fc-next-button");
+
+         var leftArrow=$("<img src='SJimagesV2/arrow_left.png' class='arrow_l' />");
+         var rightArrow=$("<img src='SJimagesV2/arrow_right.png' class='arrow_r' />");
+         $.each($._data(leftButton[0], "events"), function() {
+            // iterate registered handler of original
+            $.each(this, function() {
+                leftArrow.bind(this.type, this.handler);
+                leftArrow.click(customHeader);
+            });
+        });
+        $.each($._data(rightButton[0], "events"), function() {
+            // iterate registered handler of original
+            $.each(this, function() {
+                rightArrow.bind(this.type, this.handler);
+                rightArrow.click(customHeader);
+            });
+        });
+
+        header.addClass("hide_header");
+        var newHeader=$("<div class='calender_header'></div>");
+        $(".fc-toolbar").before(newHeader);
+        newHeader.append(leftArrow);
+         newHeader.append("<h1></h1>");
+         newHeader.append(rightArrow);
+         newHeader.append("<div class='clearfix'></div>");
+         customHeader();
+}
+function customHeader(date){
+
+    if(typeof date=="string")
+    {
+        title=date;
+    }else{
+        
+            //对fullcalendar的header进行重绘，以使满足ssj风格
+        //思路:将fc的toolbar(header)拿到，然后修改其中的css
+        var header=$(".fc-toolbar");
+        if(header.length==0){
+            return false;
+        }
+        //文字替换
+        //2016年 十一月
+        //2016年11月13日
+        var title,title_a,title_y,title_m,title_d;
+        title=header.find("h2").text();
+        title=title.replace(" ","");
+        title_a=title.split(/[年月日]/);
+        title_a.pop();//空白
+        title_y =title_a[0];
+        title_m=title_a[1];
+        if(title_a.length>2&&title_a[2]!=""){
+            title_d=title_a[2];
+        }        
+        //月份汉字替换，当title_a的长度为4-1
+        if(title_a.length==2){
+            title_m=title_m.replace(title_m[0],TEXT[title_m[0]]);
+            if(title_m.length>1&&title_m!="10"){
+                if(title_m.length>2){
+                    title_m=title_m.replace(/0/,"");;
+                }
+                title_m=title_m.replace(title_m[1],TEXT[title_m[1]]);
+            }
+        }
+       title_a[1]=title_m;
+       title=title_a.join("-");
+        console.log(title);
+    }
+         
+        //header.empty();
+        var newHeader=$(".calender_header");
+        newHeader.find("h1").text(title);;
+         customWidget();
+         bindClick2day();
+ 
+}
+function customWidget(){
+
+    var widgetHeader=$(".fc-head-container");
+         var weeks=widgetHeader.find(".fc-day-header");
+        //  widgetHeader.removeClass().addClass("form_title");
+         $.each(weeks,function(){
+            //  $(this).addClass("form_title_li");
+             $(this).text($(this).text().replace(/周/,""));
+             $(this).text($(this).text().replace(/星期/,""));
+         });
+
+         var dayNumber=$(".fc-day-number");
+         $.each(dayNumber,function(){
+            //  $(this).removeClass("fc-day-number").addClass("form_day_number");;
+
+
+         });
+
+}
+function bindClick2day(){
+
+    var days=$(".fc-day-grid").find(".fc-day-number");
+    $.each(days,function(){
+        //$(this).click(customHeader);
+        $(this).click(function(){
+            console.log($(this).attr("data-goto"));
+            var date=JSON.parse($(this).attr("data-goto")).date;
+            customHeader(date);
+        });
+    });
+}

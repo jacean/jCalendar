@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+<style>
+h1,body{ 
+	margin:0;
+}
+ul{ 
+	margin:0; 
+	padding:0;
+}
+li{ 
+	list-style:none;
+}
+.clearfix{ 
+	clear:both;
+}
+.calender_header{
+	margin:0 2%;
+	background-color:#59bec6;
+	padding-top:30px;
+	padding-bottom:15px;
+}
+.calender_header h1{
+	font-family:"微软雅黑";
+	font-size:2em;
+	color:#ffffff;
+	text-align:center;
+}
+.arrow_l{
+ 	position:absolute;
+	left:15px;
+	top:44px;
+}
+.arrow_r{ 	
+	position:absolute;
+	right:15px;
+	top:44px;
+}
+.form_title{
+ 	background-color:#67cbd3;
+	margin:0 2%;	
+}
+.form_title li{ 
+	float:left;
+	padding:4px 20px;
+	color:#ffffff;
+}
+</style>
+
+</head>
+
+<body>
+<!--日历头-->
+<div class="calender_header">
+	<button class="arrow_l">
+		<img src="SJimagesV2/arrow_left.png"  />
+	</button>
+	<h1>2016-11</h1>
+	<button class="arrow_r"><img src="SJimagesV2/arrow_right.png"  />
+	</button>
+	<div class="clearfix"></div>
+</div>
+
+<div class="form_title">
+	<ul>
+    	<li>日</li>
+        <li>六</li>
+        <li>一</li>
+        <li>二</li>
+        <li>三</li>
+        <li>四</li>
+        <li>五</li>
+        <div class="clearfix"></div>
+    </ul>
+</div>
+
+
+<div class="calender_header">
+	<img src="SJimagesV2/arrow_left.png" class="arrow_l" />
+    <h1>2016-11-11</h1>
+    <img src="SJimagesV2/arrow_right.png" class="arrow_r" />
+    <div class="clearfix"></div>
+</div>
+<div class="form_title">
+	<ul>
+    	<li>星期日</li>
+        <div class="clearfix"></div>
+    </ul>
+</div>
+</body>
+</html>
