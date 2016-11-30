@@ -86,6 +86,7 @@ var CalendarInit=function(params){
         var moment=params.startDate;
         var click2day=params.click2day=="true"?true:false;
         $('#calendar').fullCalendar({
+            defaultView:'month',
 			header: {
 				center: 'title',
 				left: 'prev',
@@ -100,17 +101,20 @@ var CalendarInit=function(params){
 			editable: true,
 			eventLimit: true, // allow "more" link when too many events
 			dayClick: function(date, jsEvent, view) {
-				console.log('Clicked on: ' + date.format());
+				console.log('Clicked on day: ' + date.format());
 				//$(this).css('background-color', 'red');
                 //回传函数，告诉jsp点击了这个时间，然后由主机调用refresh回调重新渲染事件
                 // _oprate.newItem(ID,Evtstr,dateStart,dateEnd);
 				customHeader();
+                //$('#calendar').fullCalendar( 'changeView', "agendaDay" );
 			},
-            // navLinkDayClick: function(date, jsEvent) {
-            //     console.log('day', date.format()); // date is a moment
-            //     console.log('coords', jsEvent.pageX, jsEvent.pageY);
-            //     customHeader();
-            // },
+            navLinkDayClick: function(date, jsEvent) {
+                console.log('click navlink day:', date.format()); // date is a moment
+                
+                $('#calendar').fullCalendar( 'changeView', "agendaDay" );
+                $('#calendar').fullCalendar( 'gotoDate', date.format() );
+                customHeader();
+            },
             eventClick: function(calEvent, jsEvent, view) {
                 console.log('Event: ' + calEvent.title+"BH:"+calEvent.BH);
                 // _oprate.editItem(ID,BH);
@@ -198,7 +202,7 @@ function customHeader(date){
     {
         title=date;
     }else{
-        
+
             //对fullcalendar的header进行重绘，以使满足ssj风格
         //思路:将fc的toolbar(header)拿到，然后修改其中的css
         var header=$(".fc-toolbar");
@@ -237,7 +241,7 @@ function customHeader(date){
         var newHeader=$(".calender_header");
         newHeader.find("h1").text(title);;
          customWidget();
-         bindClick2day();
+         //bindClick2day();
  
 }
 function customWidget(){
@@ -248,7 +252,6 @@ function customWidget(){
          $.each(weeks,function(){
             //  $(this).addClass("form_title_li");
              $(this).text($(this).text().replace(/周/,""));
-             $(this).text($(this).text().replace(/星期/,""));
          });
 
          var dayNumber=$(".fc-day-number");
@@ -261,13 +264,16 @@ function customWidget(){
 }
 function bindClick2day(){
 
-    var days=$(".fc-day-grid").find(".fc-day-number");
+    var days=$(".fc-day-grid").find(".fc-day");
     $.each(days,function(){
         //$(this).click(customHeader);
         $(this).click(function(){
-            console.log($(this).attr("data-goto"));
-            var date=JSON.parse($(this).attr("data-goto")).date;
-            customHeader(date);
+            console.log($(this).attr("data-date"));
+            var str=$(this).attr("data-date");
+            if(typeof str!="undefined"){
+            //var date=JSON.parse(str).date;
+            //customHeader(str);
+        }
         });
     });
 }
